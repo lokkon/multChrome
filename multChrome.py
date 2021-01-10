@@ -21,7 +21,6 @@ class Display():
         self.usersfile = 'users.json'
         self.win.iconbitmap("tmp.ico")
         os.remove("tmp.ico")
-        # win.configure(background='white')
 
     def draw(self):
         title = tk.Label(self.win,text="Chrome多开管理器",font=tkfont.Font(family='黑体', size=16),justify='center')
@@ -35,9 +34,18 @@ class Display():
         var_new_user = tk.StringVar()
         new_user_entry = tk.Entry(add_user_frm, width=20, textvariable=var_new_user)
         new_user_entry.pack(side="left", padx=10, pady=5)
-
         add_user_button = tk.Button(add_user_frm, text='添加', width=12, command=lambda: self.add_user(var_new_user))
         add_user_button.pack(side="left", padx=10, pady=5)
+        #Chrome路径设置
+        chrome_path_frm = tk.Frame(self.win)
+        chrome_path_frm.pack(side="bottom", padx=5, pady=5, fill="both")
+        chrome_path_label = tk.Label(chrome_path_frm, text="Chrome路径")
+        chrome_path_label.pack(side="left", padx=10, pady=5)
+        var_chrome_path = tk.StringVar()
+        var_chrome_path.set('C:\Program Files (x86)\Google\Chrome\Application\chrome.exe')
+        new_user_entry = tk.Entry(chrome_path_frm, width=30, textvariable=var_chrome_path)
+        new_user_entry.pack(side="left", padx=10, pady=5, fill="both")
+        self.var_chrome_path = var_chrome_path
 
         #读取用户名列表
         var_user_lb = tk.StringVar()
@@ -81,13 +89,15 @@ class Display():
 
         self.win.mainloop()
 
-
     def selectedUser(self, event=None):
         users = self.user_lb.curselection()  # 提取点中选项的下标
+        chrome_path = self.var_chrome_path.get()
         for i in users:
             user = self.user_lb.get(i)  # 提取点中选项下标的值
-            openChrome(user)
-
+            chrome_opened = openChrome(user, chrome_path)
+            if chrome_opened == False:
+                tk.messagebox.showerror('错误', '请检查Chrome路径')
+                break
 
     def add_user(self,var_new_user):
         new_user = var_new_user.get()
@@ -154,7 +164,6 @@ class Display():
     #     else:
     #         print('file does not exist')
 
-
     def open_userfolder(self):
         users = self.user_lb.curselection()  # 提取点中选项的下标
         for i in users:
@@ -167,11 +176,14 @@ class Display():
             else:
                 tk.messagebox.showerror('错误', '用户 ' + user + ' 文件不存在！')
 
-def openChrome(user_name):
-    chrome_baseurl = 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
-    chrome_url = chrome_baseurl + '  --profile-directory="%s"' % user_name
-    win32process.CreateProcess(None, chrome_url, None, None, 0, win32process.CREATE_NO_WINDOW, None, None,
-                               win32process.STARTUPINFO())
+def openChrome(user_name, chrome_path):
+    try:
+        chrome_url = chrome_path + '  --profile-directory="%s"' % user_name
+        win32process.CreateProcess(None, chrome_url, None, None, 0, win32process.CREATE_NO_WINDOW, None, None,
+                                   win32process.STARTUPINFO())
+    except:
+        chrome_opened = False
+        return chrome_opened
 
 def is_admin():
     try:
