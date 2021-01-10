@@ -179,10 +179,7 @@ def is_admin():
     except:
         return False
 
-
-
-
-
-my = Display()
-my.draw()
+if __name__ == '__main__':
+    my = Display()
+    my.draw()
 
