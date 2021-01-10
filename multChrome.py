@@ -15,7 +15,7 @@ class Display():
 
     def __init__(self):
         self.win = tk.Tk()
-        self.win.title('Chrome多开管理器')
+        self.win.title('Chrome 多开管理器 v1.2')
         self.win.geometry('350x400')
         self.menu = tk.Menu(self.win, tearoff=0)
         self.usersfile = 'users.json'
@@ -102,7 +102,7 @@ class Display():
     def add_user(self,var_new_user):
         new_user = var_new_user.get()
         try:
-            if new_user.isalnum():
+            if new_user.encode('utf-8').isalnum():
                 with open(self.usersfile, 'r', encoding='utf-8') as f_obj:
                     file = f_obj.read()
                     if len(file) == 0:
@@ -194,4 +194,3 @@ def is_admin():
 if __name__ == '__main__':
     my = Display()
     my.draw()
-
