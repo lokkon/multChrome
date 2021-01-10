@@ -86,7 +86,6 @@ class Display():
         users = self.user_lb.curselection()  # 提取点中选项的下标
         for i in users:
             user = self.user_lb.get(i)  # 提取点中选项下标的值
-            print(user)
             openChrome(user)
 
 
@@ -94,8 +93,6 @@ class Display():
         new_user = var_new_user.get()
         try:
             if new_user.isalnum():
-                print('test')
-                print(new_user)
                 with open(self.usersfile, 'r', encoding='utf-8') as f_obj:
                     file = f_obj.read()
                     if len(file) == 0:
@@ -103,7 +100,7 @@ class Display():
                         user_list.append(new_user)
                     else:
                         user_list = json.loads(file)
-                        print(user_list)
+                        # print(user_list)
                         if new_user in user_list:
                             tk.messagebox.showerror('错误','该用户已存在！')
                         else:
@@ -126,8 +123,6 @@ class Display():
                 user_list = json.load(f_obj)
                 for user in user_list:
                     self.user_lb.insert('end', user)
-                # for i in range(0, len(user_list)):
-                #     print(str(i + 1) + ' : ' + user_list[i])
         except FileNotFoundError:
             print('File not found, please add user first')
 
@@ -166,7 +161,7 @@ class Display():
             user = self.user_lb.get(i)
             appdata = os.getenv("LOCALAPPDATA")
             user_data = appdata + r'\Google\Chrome\User Data' + '\\' + user
-            print(user_data)
+            # print(user_data)
             if os.path.exists(user_data):
                 os.startfile(user_data)
             else:
@@ -174,9 +169,7 @@ class Display():
 
 def openChrome(user_name):
     chrome_baseurl = 'C:\Program Files (x86)\Google\Chrome\Application\chrome.exe'
-
     chrome_url = chrome_baseurl + '  --profile-directory="%s"' % user_name
-    print(chrome_url)
     win32process.CreateProcess(None, chrome_url, None, None, 0, win32process.CREATE_NO_WINDOW, None, None,
                                win32process.STARTUPINFO())
 
